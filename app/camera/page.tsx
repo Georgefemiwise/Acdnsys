@@ -9,6 +9,7 @@ export default function CameraCapture() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [test, setTest] = useState("");
 
   // Fetch available video devices
   useEffect(() => {
@@ -25,32 +26,48 @@ export default function CameraCapture() {
   }, []);
 
   // Capture snapshot and send to backend
-  const captureImage = async () => {
-    setLoading(true);
-    if (!webcamRef.current) return;
-    const imageSrc = webcamRef.current.getScreenshot();
-    if (!imageSrc) return;
+const captureImage = async () => {
+  setLoading(true);
+  if (!webcamRef.current) return;
 
-    setCaptured(imageSrc);
+  const imageSrc = webcamRef.current.getScreenshot();
+  if (!imageSrc) {
+    setLoading(false);
+    return;
+  }
 
-    try {
-      const res = await fetch("/api/process", {
+  setCaptured(imageSrc);
+
+  try {
+    const res = await fetch("/api/process", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageUrl: imageSrc }),
+    });
+
+    const json = await res.json();
+    const plate = json?.roboflow?.outputs?.[0]?.output?.[0];
+    setTest(plate)
+
+    if (plate) {
+      await fetch("/api/plates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl: imageSrc }),
+        body: JSON.stringify({ plate }),
       });
-
-      const json = await res.json();
-      setLoading(false);
-      setResult(json["roboflow"]);
-    } catch (err) {
-      setLoading(false);
-      console.error("Error sending image:", err);
-      setResult({ error: "Failed to get response" });
-    } finally {
-      setLoading(false);
+    } else {
+      console.warn("⚠️ No plate detected in response:", json);
     }
-  };
+
+    setResult(json["roboflow"]);
+  } catch (err) {
+    console.error("Error sending image:", err);
+    setResult({ error: "Failed to get response" });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="flex flex-col md:items-center space-y-4 w-full">
@@ -64,10 +81,7 @@ export default function CameraCapture() {
             onChange={(e) => setSelectedDevice(e.target.value)}
           >
             {devices.map((device, idx) => (
-              <option
-                key={device.deviceId}
-                value={device.deviceId}
-              >
+              <option key={device.deviceId} value={device.deviceId}>
                 {device.label || `Camera ${idx + 1}`}
               </option>
             ))}
