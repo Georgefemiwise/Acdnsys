@@ -7,7 +7,6 @@ export type PlateRecord = {
   owner?: string;
 };
 
-
 type Props = {
   record: PlateRecord;
   onDelete?: (r: PlateRecord) => void;
