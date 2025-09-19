@@ -19,3 +19,4 @@ const newVersion = `${major}.${minor}.${patch}`;
 fs.writeFileSync(versionFile, newVersion);
 
 console.log(`Bumped version: ${version} → ${newVersion}`);
+
