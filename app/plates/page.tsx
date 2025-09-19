@@ -60,7 +60,6 @@ export default function PlatesPage() {
         number is stored here for review and action.
       </p>
 
-
       {/* Loading */}
       {loading && (
         <p className="text-gray-500 animate-pulse">
