@@ -49,6 +49,11 @@ export async function POST(req: Request) {
       roboflow: roboflowResult,
       // backend: backendResult,
     });
+
+    // return NextResponse.json({
+    //   roboflow: roboflowResult,
+    //   // backend: backendResult,
+    // });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
