@@ -1,13 +1,14 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
+import Webcam from "react-webcam";
 
 export default function CameraCapture() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const webcamRef = useRef<Webcam>(null);
   const [captured, setCaptured] = useState<string | null>(null);
   const [result, setResult] = useState<any>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   // Fetch available video devices
   useEffect(() => {
@@ -17,108 +18,118 @@ export default function CameraCapture() {
         const cams = deviceInfos.filter((d) => d.kind === "videoinput");
         setDevices(cams);
         if (cams.length > 0) {
-          setSelectedDevice(cams[0].deviceId); // default to first camera
+          setSelectedDevice(cams[0].deviceId);
         }
       })
       .catch((err) => console.error("Error enumerating devices:", err));
   }, []);
 
-  // Start camera stream
-  const startCamera = async () => {
-    try {
-      const constraints: MediaStreamConstraints = {
-        video: {
-          deviceId: selectedDevice ? { exact: selectedDevice } : undefined,
-        },
-      };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (err) {
-      console.error("Error accessing camera:", err);
-    }
-  };
-
   // Capture snapshot and send to backend
   const captureImage = async () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
+    setLoading(true);
+    if (!webcamRef.current) return;
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (!imageSrc) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Draw frame from video into canvas
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const dataUrl = canvas.toDataURL("image/jpeg"); // base64
-    setCaptured(dataUrl);
+    setCaptured(imageSrc);
 
     try {
       const res = await fetch("/api/process", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl: dataUrl }), // sending as `imageUrl`
+        body: JSON.stringify({ imageUrl: imageSrc }),
       });
 
       const json = await res.json();
-      setResult(json);
+      setLoading(false);
+      setResult(json["roboflow"]);
     } catch (err) {
+      setLoading(false);
       console.error("Error sending image:", err);
       setResult({ error: "Failed to get response" });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col md:items-center space-y-4 w-full">
       {/* Camera selector */}
       {devices.length > 1 && (
-        <select
-          className="select select-bordered w-full max-w-xs"
-          value={selectedDevice}
-          onChange={(e) => setSelectedDevice(e.target.value)}
-        >
-          {devices.map((device, idx) => (
-            <option key={device.deviceId} value={device.deviceId}>
-              {device.label || `Camera ${idx + 1}`}
-            </option>
-          ))}
-        </select>
+        <>
+          <p className="text-xs opacity-40">Select a camera </p>
+          <select
+            className="select select-bordered w-full max-w-xs mb-5 capitalize"
+            value={selectedDevice}
+            onChange={(e) => setSelectedDevice(e.target.value)}
+          >
+            {devices.map((device, idx) => (
+              <option
+                key={device.deviceId}
+                value={device.deviceId}
+              >
+                {device.label || `Camera ${idx + 1}`}
+              </option>
+            ))}
+          </select>
+        </>
       )}
 
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        className="rounded shadow max-w-md"
-      />
-      <canvas ref={canvasRef} className="hidden" />
+      {/* Camera preview */}
+      <p className="text-xs opacity-40">
+        Take a picture of a{" "}
+        <span className="text-primary font-extrabold">{"Car's"}</span> front
+        view.
+      </p>
+      <div className="relative w-full max-w-md md:aspect-video bg-black rounded-xl overflow-hidden shadow-lg">
+        <Webcam
+          ref={webcamRef}
+          audio={false}
+          screenshotFormat="image/jpeg"
+          videoConstraints={{ deviceId: selectedDevice }}
+          className="w-full h-full object-cover"
+        />
 
-      <div className="space-x-2">
-        <button onClick={startCamera} className="btn btn-primary">
-          Start Camera
-        </button>
-        <button onClick={captureImage} className="btn btn-secondary">
-          Capture & Send
-        </button>
+        {/* Floating captured preview */}
+        {captured && (
+          <img
+            src={captured}
+            alt="snapshot"
+            className="
+              absolute top-2 right-2 
+              rounded shadow-md border opacity-70
+              w-[15%]        /* mobile: 10% of width */
+              md:w-[25%]     /* desktop: 25% of width */
+            "
+          />
+        )}
+
+        {/* Shutter button */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4">
+          <button
+            onClick={captureImage}
+            className="w-16 h-16 rounded-full bg-white border-4 border-gray-300 shadow-md active:scale-95 transition"
+          />
+        </div>
       </div>
 
-      {captured && (
-        <div>
-          <h3 className="font-bold mt-4">Captured Image:</h3>
-          <img src={captured} alt="snapshot" className="rounded shadow mt-2" />
-        </div>
-      )}
-
-      {result && (
-        <div className="bg-grayh-100 p-4 mt-4 rounded w-full max-w-md">
-          <h3 className="font-bold">Backend Response:</h3>
-          <pre className="text-sm">{JSON.stringify(result, null, 2)}</pre>
-        </div>
-      )}
+      {/* Backend result */}
+      <div className="p-4 mt-4 rounded w-full max-w-md">
+        <h3 className="font-bold">Backend Response:</h3>
+        {!loading ? (
+          result && (
+            <pre className="text-sm">{JSON.stringify(result, null, 2)}</pre>
+          )
+        ) : (
+          <div className="">
+            <span className="loading loading-ball loading-xs"></span>
+            <span className="loading loading-ball loading-sm"></span>
+            <span className="loading loading-ball loading-md"></span>
+            <span className="loading loading-ball loading-lg"></span>
+            <span className="loading loading-ball loading-xl"></span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
