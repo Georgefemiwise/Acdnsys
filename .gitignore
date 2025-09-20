@@ -45,3 +45,7 @@ venv
 
 # python
 __pycache__
+
+
+# tinydb
+plates.json

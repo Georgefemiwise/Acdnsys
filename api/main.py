@@ -1,15 +1,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import base64
+from fastapi.middleware.cors import CORSMiddleware
+from .routes import plates
 
 
-app = FastAPI()
+app = FastAPI(title="Acdnsys Backend")
+
+app.include_router(plates.router)
 
 
 @app.get("/ping")
 def ping():
     return {"message": "pong from FastAPI"}
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
