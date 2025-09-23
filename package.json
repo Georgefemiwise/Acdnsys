@@ -1,11 +1,15 @@
 {
   "name": "front",
-  "version": "1.0.1",
+  "version": "2.1.0",
   "private": true,
+  "description": "Enhanced Vehicle Detection & License Plate Recognition System - Frontend",
+  "keywords": ["vehicle-detection", "license-plate", "recognition", "nextjs", "react"],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "daisyui": "^5.1.13",
@@ -13,7 +17,8 @@
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-webcam": "^7.2.0"
+    "react-webcam": "^7.2.0",
+    "recharts": "^2.8.0"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -21,6 +26,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@tailwindcss/postcss": "^4.1.13",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "eslint": "^8",
+    "eslint-config-next": "15.5.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

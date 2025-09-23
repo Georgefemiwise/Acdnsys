@@ -17,6 +17,19 @@ pydantic
 # CORS middleware
 python-multipart
 
+# Enhanced validation and security
+email-validator
+phonenumbers
+
+# Performance and caching
+cachetools
+
+# Logging and monitoring
+structlog
+
+# Data processing
+python-dateutil
+
 # Development tools
 pytest
 pytest-asyncio
