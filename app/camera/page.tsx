@@ -39,27 +39,37 @@ const captureImage = async () => {
   setCaptured(imageSrc);
 
   try {
-    const res = await fetch("/api/process", {
+    const res = await fetch("/api/detection", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imageUrl: imageSrc }),
+      body: JSON.stringify({ 
+        imageUrl: imageSrc,
+        camera_id: "webcam-1",
+        location: "Main Entrance"
+      }),
     });
 
     const json = await res.json();
-    const plate = json?.roboflow?.outputs?.[0]?.output?.[0];
-    setTest(plate)
-
-    if (plate) {
-      await fetch("/api/plates", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plate }),
-      });
+    
+    // Handle the new detection response format
+    if (json.plate_number) {
+      setTest(json.plate_number);
+      
+      // Show success message if matched
+      if (json.matched_user_id) {
+        console.log(`✅ Plate ${json.plate_number} matched to user ID ${json.matched_user_id}`);
+        if (json.notification_sent) {
+          console.log("📱 SMS notification sent successfully");
+        }
+      } else {
+        console.log(`⚠️ Plate ${json.plate_number} detected but no match found`);
+      }
     } else {
       console.warn("⚠️ No plate detected in response:", json);
+      setTest("No plate detected");
     }
 
-    setResult(json["roboflow"]);
+    setResult(json);
   } catch (err) {
     console.error("Error sending image:", err);
     setResult({ error: "Failed to get response" });

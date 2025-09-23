@@ -1,39 +1,92 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-import base64
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import plates, sms
+from .routes import plates, sms, users, detection
 
 
-app = FastAPI(title="Acdnsys Backend")
-
-app.include_router(plates.router)
-app.include_router(sms.router)
-
-@app.get("/ping")
-def ping():
-    return {"message": "pong from FastAPI"}
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # or ["http://localhost:3000"]
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+app = FastAPI(
+    title="Acdnsys - Vehicle Detection & License Plate Recognition System",
+    description="Comprehensive backend API for vehicle detection, license plate recognition, user management, and SMS notifications",
+    version="2.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
-class ImageRequest(BaseModel):
-    image: str  # base64 string
+# Include all routers
+app.include_router(plates.router)
+app.include_router(sms.router)
+app.include_router(users.router)
+app.include_router(detection.router)
 
-@app.post("/analyze")
-def analyze_image(req: ImageRequest):
-    # Here you’d run ML or car plate detection etc.
-    # For demo just return mock data
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify exact origins
+    allow_credentials=True,
+    allow_methods=["*"],
+@router.get("/")
+def root():
+    """
+    API root endpoint with system information
+    """
+    return {
+        "message": "Acdnsys Backend API",
+        "version": "2.0.0",
+        "description": "Vehicle Detection & License Plate Recognition System",
+        "endpoints": {
+            "users": "/users - User management",
+            "plates": "/plates - License plate management", 
+            "detection": "/detection - Vehicle detection and matching",
+            "sms": "/sms - SMS notifications",
+            "docs": "/docs - API documentation"
+        },
+        "status": "operational"
+    }
+    allow_headers=["*"],
+)
+@app.get("/ping")
+def ping():
+    """
+    Health check endpoint
+    """
+    return {
+        "message": "pong from Acdnsys API",
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat()
+    }
 
+
+@app.get("/stats")
+def get_system_stats():
+    """
+    Get system-wide statistics
+    """
+    from .db.database import users_table, plates_table, detections_table
+    
+    total_users = len(users_table.all())
+    active_users = len(users_table.search(User.is_active == True))
+    total_plates = len(plates_table.all())
+    active_plates = len(plates_table.search(Plate.is_active == True))
+    total_detections = len(detections_table.all())
     
     return {
-        "car": "Toyota Corolla",
-        "color": "Silver",
-        "plate": "GR-1234-21",
-        "confidence": 0.95
+        "users": {
+            "total": total_users,
+            "active": active_users
+        },
+        "plates": {
+            "total": total_plates,
+            "active": active_plates
+        },
+        "detections": {
+            "total": total_detections
+        },
+        "system": {
+            "database_status": "operational",
+            "api_version": "2.0.0"
+        }
     }
+
+
+# Import datetime for timestamps
+from datetime import datetime
+from .db.database import User, Plate

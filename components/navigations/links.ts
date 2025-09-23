@@ -6,7 +6,7 @@ type navLinksTypes = {
 
 export const navLinks: navLinksTypes[] = [
   { name: "camera", link: "/camera", disabled: false },
-  { name: "plates", link: "/plates", disabled: false },
+  { name: "management", link: "/management", disabled: false },
   { name: "detection", link: "/detection", disabled: false },
-  
+  { name: "analytics", link: "/analytics", disabled: true },
 ];

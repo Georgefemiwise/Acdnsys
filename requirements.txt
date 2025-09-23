@@ -1,3 +1,25 @@
+# Core FastAPI dependencies
 fastapi
 uvicorn[standard]
+
+# Database
 tinydb
+
+# HTTP requests
+requests
+
+# Environment variables
+python-dotenv
+
+# Data validation and parsing
+pydantic
+
+# CORS middleware
+python-multipart
+
+# Development tools
+pytest
+pytest-asyncio
+
+# Optional: For production deployment
+gunicorn
