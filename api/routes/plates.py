@@ -1,25 +1,33 @@
-import time
+from datetime import datetime
 import random
 from fastapi import APIRouter, HTTPException
+
+from api.routes.sms import send_sms_route
+
+from ..models.sms import Sms
+from ..services.sms_service import send_sms
 from ..models.plate import Plate
 from ..db.tinydb import plates_table
 
 router = APIRouter(prefix="/plates", tags=["Plates"])
 
 
-# Create
+# Create Plate + Send SMS
 @router.post("/")
 def create_plate(plate: Plate):
-    # Generate a unique ID based on timestamp
-    plate.id = int(time.time() * 1000)
-
-    print(plate)
-    # Insert into TinyDB
+    plate.id = random.randint(1000, 9999)
+    plate.detected_at = datetime.utcnow().isoformat()
     plates_table.insert(plate.dict())
-    print(plate)
 
-    # Return the newly created plate only
-    return {"plate": plate.dict()}
+    # Send SMS if phone exists
+    if plate.owner and plate.phone:
+        sms = Sms(
+            to=plate.phone,
+            message=f"Hello {plate.owner}, your plate {plate.plate} was detected at {plate.detected_at}",
+        )
+        send_sms_route(sms)
+
+    return {"plates": plates_table.all()}
 
 
 # Read all

@@ -9,3 +9,5 @@ class Plate(BaseModel):
     phone:str
     owner: Optional[str] = None
     detected_at: str = datetime.datetime.utcnow().isoformat()
+
+
