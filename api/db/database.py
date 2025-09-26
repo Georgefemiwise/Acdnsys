@@ -90,3 +90,5 @@ def init_database():
 
 # Initialize on import
 init_database()
+
+

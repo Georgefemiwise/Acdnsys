@@ -130,7 +130,8 @@ export default function AnalyticsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState<"day" | "week" | "month" | "year">("week");
   const [selectedMetric, setSelectedMetric] = useState<"detections" | "matches" | "notifications">("detections");
 
-  const API_BASE = "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+ = "http://localhost:8000";
 
   // Color schemes for charts
   const COLORS = {

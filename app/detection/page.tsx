@@ -49,7 +49,7 @@ export default function DetectionPage() {
   const [filter, setFilter] = useState<"all" | "matched" | "unmatched">("all");
   const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
 
-  const API_BASE = "/api";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
   // Fetch detection history
   const fetchDetections = async () => {
@@ -384,9 +384,9 @@ export default function DetectionPage() {
           </div>
         </div>
       )}
-    </div>
+    {/* </div>
   );
-}
+} */}
 
       <p className="text-gray-600 mb-6">
         Every time a camera captures and processes a vehicle, the detected plate
@@ -404,24 +404,24 @@ export default function DetectionPage() {
       {error && <p className="text-red-500 font-medium">⚠️ {error}</p>}
 
       {/* Empty */}
-      {!loading && plates.length === 0 && !error && (
+      {/* {!loading && plates.length === 0 && !error && (
         <div className="flex flex-col items-center justify-center py-12 text-gray-500">
           <div className="text-5xl mb-3">📭</div>
           <p className="text-lg font-medium">No plates detected yet</p>
           <p className="text-sm">Capture an image to see results here.</p>
         </div>
-      )}
+      )} */}
 
       {/* Plates grid */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {plates.map((p) => (
+        {/* {plates.map((p) => (
           <PlateItem
             key={p.id}
             record={p}
             onCopy={handleCopy}
             onDelete={handleDelete}
           />
-        ))}
+        ))} */}
       </ul>
     </div>
   );

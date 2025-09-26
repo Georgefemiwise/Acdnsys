@@ -15,6 +15,7 @@ export async function GET(request: Request) {
       },
     });
 
+    print(response)
     if (!response.ok) {
       const errorData = await response.json();
       return NextResponse.json(errorData, { status: response.status });
@@ -31,6 +32,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+
+  
   try {
     const body = await request.json();
     
@@ -41,7 +44,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify(body),
     });
-
+   
     if (!response.ok) {
       const errorData = await response.json();
       return NextResponse.json(errorData, { status: response.status });

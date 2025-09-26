@@ -104,7 +104,7 @@ export default function ManagementPage() {
     is_primary: true
   });
 
-  const API_BASE = "/api";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
   // Utility functions
   const showMessage = (message: string, type: "success" | "error") => {
@@ -379,7 +379,7 @@ export default function ManagementPage() {
   }, [showInactive]);
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">
@@ -475,7 +475,7 @@ export default function ManagementPage() {
           {activeTab === "users" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredUsers.map((user) => (
-                <div key={user.id} className="card bg-base-100 shadow-lg">
+                <div key={user.id} className="card bg-base-200 shadow-lg ">
                   <div className="card-body">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="card-title text-lg">{user.name}</h3>

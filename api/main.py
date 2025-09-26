@@ -24,7 +24,7 @@ app = FastAPI(
     - `/sms` - SMS notification services
     - `/analytics` - System analytics and reporting
     """,
-    version="2.1.0",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
     contact={
@@ -355,4 +355,4 @@ if __name__ == "__main__":
         reload=True,
         log_level="info"
     )
-        }
+        
