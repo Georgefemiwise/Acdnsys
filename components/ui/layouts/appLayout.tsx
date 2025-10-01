@@ -42,7 +42,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       {/* Body Section */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar */}
-        <aside className="w-72 border-r border-base-300">
+        <aside className="md:w-72 border-r border-base-300">
           <SideBar />
         </aside>
 
@@ -52,9 +52,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </main>
 
         {/* Right Sidebar */}
-        <aside className="w-64 border-l border-base-300 p-4 bg-base-50">
-          {/* Empty or widgets */}
-        </aside>
+        {/* <aside className="w-64 border-l border-base-300 p-4 bg-base-50">
+          Empty or widgets
+        </aside> */}
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ notifications_table = db.table("notifications")
 # Create indexes for better performance (TinyDB doesn't have real indexes, but we can optimize queries)
 User = Query()
 Plate = Query()
-Detection = Query()
+Detection = Query()  
 Notification = Query()
 
 

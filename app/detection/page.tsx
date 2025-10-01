@@ -198,7 +198,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       {/* Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         {/* Filter Tabs */}
-        <div className="tabs tabs-boxed">
+        <div className="tabs tabs-lift">
           <button
             className={`tab ${filter === "all" ? "tab-active" : ""}`}
             onClick={() => setFilter("all")}

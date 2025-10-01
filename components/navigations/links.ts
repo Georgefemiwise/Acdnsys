@@ -4,6 +4,7 @@ import {
   ScanLine,
   BarChart3,
   LucideIcon,
+  LayoutDashboard,
 } from "lucide-react";
 
 export type NavLinkType = {
@@ -14,6 +15,7 @@ export type NavLinkType = {
 };
 
 export const navLinks: NavLinkType[] = [
+  { name: "Dashboard", link: "/", icon: LayoutDashboard },
   { name: "camera", link: "/camera", icon: Camera },
   { name: "management", link: "/management", icon: Settings },
   { name: "detection", link: "/detection", icon: ScanLine },

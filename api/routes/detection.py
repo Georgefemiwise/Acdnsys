@@ -23,12 +23,13 @@ async def process_detection(request: DetectionRequest, background_tasks: Backgro
     - **location**: Location where detection occurred (optional)
     """
     try:
+        print(request.image_url)
         # Validate image URL
-        if not request.image_url or not request.image_url.startswith(('http://', 'https://')):
-            raise HTTPException(
-                status_code=400, 
-                detail="Valid image URL is required (must start with http:// or https://)"
-            )
+        # if not request.image_url or not request.image_url.startswith(('http://', 'https://')):
+        #     raise HTTPException(
+        #         status_code=400, 
+        #         detail="Valid image URL is required (must start with http:// or https://)"
+        #     )
         
         # Process detection in the background for better performance
         result = await detection_service.process_detection(request)

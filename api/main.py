@@ -53,6 +53,7 @@ app.add_middleware(
         "http://localhost:3001",  # Alternative port
         "https://acdnsys.vercel.app",  # Production frontend (example)
         # Add your production domains here
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],

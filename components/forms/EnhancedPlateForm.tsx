@@ -337,14 +337,14 @@ export default function EnhancedPlateForm({
             <Plus className="w-8 h-8 text-primary mr-3" />
           )}
           <h2 className="text-3xl font-bold text-gray-900">
-            {title || (isEditing ? "Edit License Plate" : "Register New Vehicle")}
+            {title ||
+              (isEditing ? "Edit License Plate" : "Register New Vehicle")}
           </h2>
         </div>
         <p className="text-gray-600">
-          {isEditing 
+          {isEditing
             ? "Update vehicle and license plate information"
-            : "Register a new vehicle with license plate for detection system"
-          }
+            : "Register a new vehicle with license plate for detection system"}
         </p>
       </div>
 
@@ -367,35 +367,43 @@ export default function EnhancedPlateForm({
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Owner Selection */}
-        <div className="card bg-base-100 shadow-lg">
+        <div className="card bg-base-100 ">
           <div className="card-body">
             <h3 className="card-title text-xl mb-6">Vehicle Owner</h3>
-            
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">
+
+            <div className="">
+              <fieldset className="fieldset w-full">
+                <legend className="fieldset-legend">
                   <User className="w-4 h-4 inline mr-2" />
                   Select Owner *
-                </span>
-              </label>
-              <select
-                className={`select select-bordered ${
-                  errors.user_id && touched.user_id ? 'select-error' : 
-                  formData.user_id && !errors.user_id ? 'select-success' : ''
-                }`}
-                value={formData.user_id}
-                onChange={(e) => handleInputChange('user_id', parseInt(e.target.value))}
-                onBlur={() => handleFieldBlur('user_id')}
-                disabled={isSubmitting}
-                required
-              >
-                <option value={0}>Select vehicle owner...</option>
-                {users.map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.name} ({user.phone})
+                </legend>
+                <select
+                  className={`select select-bordered w-full ${
+                    errors.user_id && touched.user_id
+                      ? "select-error"
+                      : formData.user_id && !errors.user_id
+                      ? "select-success"
+                      : ""
+                  }`}
+                  value={formData.user_id}
+                  onChange={(e) =>
+                    handleInputChange("user_id", parseInt(e.target.value))
+                  }
+                  onBlur={() => handleFieldBlur("user_id")}
+                  disabled={isSubmitting}
+                  required
+                >
+                  <option disabled={true} value={0}>
+                    Select vehicle owner...
                   </option>
-                ))}
-              </select>
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name} ({user.phone})
+                    </option>
+                  ))}
+                </select>
+                {/* <span className="label">Optional</span> */}
+              </fieldset>
               {errors.user_id && touched.user_id && (
                 <label className="label">
                   <span className="label-text-alt text-error flex items-center">
@@ -404,7 +412,7 @@ export default function EnhancedPlateForm({
                   </span>
                 </label>
               )}
-              
+
               {/* Selected User Info */}
               {selectedUser && (
                 <div className="mt-3 p-3 bg-base-200 rounded-lg">
@@ -412,9 +420,13 @@ export default function EnhancedPlateForm({
                     <User className="w-4 h-4 text-primary mr-2" />
                     <div>
                       <div className="font-medium">{selectedUser.name}</div>
-                      <div className="text-sm text-gray-600">{selectedUser.phone}</div>
+                      <div className="text-sm text-gray-600">
+                        {selectedUser.phone}
+                      </div>
                       {selectedUser.email && (
-                        <div className="text-sm text-gray-600">{selectedUser.email}</div>
+                        <div className="text-sm text-gray-600">
+                          {selectedUser.email}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -425,32 +437,41 @@ export default function EnhancedPlateForm({
         </div>
 
         {/* License Plate Information */}
-        <div className="card bg-base-100 shadow-lg">
+        <div className="card ">
           <div className="card-body">
-            <h3 className="card-title text-xl mb-6">License Plate Information</h3>
-            
+            <h3 className="card-title text-xl mb-6">
+              License Plate Information
+            </h3>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* License Plate Number */}
+
               <div className="form-control md:col-span-2">
-                <label className="label">
-                  <span className="label-text font-medium">
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend">
                     <Hash className="w-4 h-4 inline mr-2" />
                     License Plate Number *
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  className={`input input-bordered font-mono text-lg text-center ${
-                    errors.plate && touched.plate ? 'input-error' : 
-                    formData.plate && !errors.plate ? 'input-success' : ''
-                  }`}
-                  placeholder="GR-1234-21"
-                  value={formData.plate}
-                  onChange={(e) => handlePlateChange(e.target.value)}
-                  onBlur={() => handleFieldBlur('plate')}
-                  disabled={isSubmitting}
-                  required
-                />
+                  </legend>
+                  <input
+                    type="text"
+                    className={`input input-bordered font-mono text-lg text-center  w-full ${
+                      errors.plate && touched.plate
+                        ? "input-error"
+                        : formData.plate && !errors.plate
+                        ? "input-success"
+                        : ""
+                    }`}
+                    placeholder="GR-1234-21"
+                    value={formData.plate}
+                    onChange={(e) => handlePlateChange(e.target.value)}
+                    onBlur={() => handleFieldBlur("plate")}
+                    disabled={isSubmitting}
+                    required
+                  />
+                  <p className="label">
+                    Ghana format: GR-1234-21, AS-5678-22, etc.
+                  </p>
+                </fieldset>
                 {errors.plate && touched.plate && (
                   <label className="label">
                     <span className="label-text-alt text-error flex items-center">
@@ -459,15 +480,10 @@ export default function EnhancedPlateForm({
                     </span>
                   </label>
                 )}
-                <label className="label">
-                  <span className="label-text-alt text-gray-500">
-                    Ghana format: GR-1234-21, AS-5678-22, etc.
-                  </span>
-                </label>
               </div>
 
               {/* Primary Vehicle Toggle */}
-              <div className="form-control md:col-span-2">
+              <div className="fieldset md:col-span-2">
                 <label className="label cursor-pointer">
                   <span className="label-text font-medium">
                     <Star className="w-4 h-4 inline mr-2" />
@@ -477,7 +493,9 @@ export default function EnhancedPlateForm({
                     type="checkbox"
                     className="toggle toggle-primary"
                     checked={formData.is_primary}
-                    onChange={(e) => handleInputChange('is_primary', e.target.checked)}
+                    onChange={(e) =>
+                      handleInputChange("is_primary", e.target.checked)
+                    }
                     disabled={isSubmitting}
                   />
                 </label>
@@ -492,10 +510,12 @@ export default function EnhancedPlateForm({
         </div>
 
         {/* Vehicle Details */}
-        <div className="card bg-base-100 shadow-lg">
+        <div className="card ">
           <div className="card-body">
-            <h3 className="card-title text-xl mb-6">Vehicle Details (Optional)</h3>
-            
+            <h3 className="card-title text-xl mb-6">
+              Vehicle Details (Optional)
+            </h3>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Vehicle Make */}
               <div className="form-control">
@@ -509,17 +529,22 @@ export default function EnhancedPlateForm({
                   type="text"
                   list="vehicle-makes"
                   className={`input input-bordered ${
-                    errors.vehicle_make && touched.vehicle_make ? 'input-error' : 
-                    formData.vehicle_make && !errors.vehicle_make ? 'input-success' : ''
+                    errors.vehicle_make && touched.vehicle_make
+                      ? "input-error"
+                      : formData.vehicle_make && !errors.vehicle_make
+                      ? "input-success"
+                      : ""
                   }`}
                   placeholder="Toyota, Honda, etc."
                   value={formData.vehicle_make}
-                  onChange={(e) => handleInputChange('vehicle_make', e.target.value)}
-                  onBlur={() => handleFieldBlur('vehicle_make')}
+                  onChange={(e) =>
+                    handleInputChange("vehicle_make", e.target.value)
+                  }
+                  onBlur={() => handleFieldBlur("vehicle_make")}
                   disabled={isSubmitting}
                 />
                 <datalist id="vehicle-makes">
-                  {vehicleMakes.map(make => (
+                  {vehicleMakes.map((make) => (
                     <option key={make} value={make} />
                   ))}
                 </datalist>
@@ -541,13 +566,18 @@ export default function EnhancedPlateForm({
                 <input
                   type="text"
                   className={`input input-bordered ${
-                    errors.vehicle_model && touched.vehicle_model ? 'input-error' : 
-                    formData.vehicle_model && !errors.vehicle_model ? 'input-success' : ''
+                    errors.vehicle_model && touched.vehicle_model
+                      ? "input-error"
+                      : formData.vehicle_model && !errors.vehicle_model
+                      ? "input-success"
+                      : ""
                   }`}
                   placeholder="Corolla, Civic, etc."
                   value={formData.vehicle_model}
-                  onChange={(e) => handleInputChange('vehicle_model', e.target.value)}
-                  onBlur={() => handleFieldBlur('vehicle_model')}
+                  onChange={(e) =>
+                    handleInputChange("vehicle_model", e.target.value)
+                  }
+                  onBlur={() => handleFieldBlur("vehicle_model")}
                   disabled={isSubmitting}
                 />
                 {errors.vehicle_model && touched.vehicle_model && (
@@ -572,17 +602,22 @@ export default function EnhancedPlateForm({
                   type="text"
                   list="vehicle-colors"
                   className={`input input-bordered ${
-                    errors.vehicle_color && touched.vehicle_color ? 'input-error' : 
-                    formData.vehicle_color && !errors.vehicle_color ? 'input-success' : ''
+                    errors.vehicle_color && touched.vehicle_color
+                      ? "input-error"
+                      : formData.vehicle_color && !errors.vehicle_color
+                      ? "input-success"
+                      : ""
                   }`}
                   placeholder="White, Black, Silver, etc."
                   value={formData.vehicle_color}
-                  onChange={(e) => handleInputChange('vehicle_color', e.target.value)}
-                  onBlur={() => handleFieldBlur('vehicle_color')}
+                  onChange={(e) =>
+                    handleInputChange("vehicle_color", e.target.value)
+                  }
+                  onBlur={() => handleFieldBlur("vehicle_color")}
                   disabled={isSubmitting}
                 />
                 <datalist id="vehicle-colors">
-                  {vehicleColors.map(color => (
+                  {vehicleColors.map((color) => (
                     <option key={color} value={color} />
                   ))}
                 </datalist>
@@ -607,15 +642,20 @@ export default function EnhancedPlateForm({
                 <input
                   type="number"
                   className={`input input-bordered ${
-                    errors.vehicle_year && touched.vehicle_year ? 'input-error' : 
-                    formData.vehicle_year && !errors.vehicle_year ? 'input-success' : ''
+                    errors.vehicle_year && touched.vehicle_year
+                      ? "input-error"
+                      : formData.vehicle_year && !errors.vehicle_year
+                      ? "input-success"
+                      : ""
                   }`}
                   placeholder="2020"
                   min="1900"
                   max={new Date().getFullYear() + 1}
                   value={formData.vehicle_year}
-                  onChange={(e) => handleInputChange('vehicle_year', e.target.value)}
-                  onBlur={() => handleFieldBlur('vehicle_year')}
+                  onChange={(e) =>
+                    handleInputChange("vehicle_year", e.target.value)
+                  }
+                  onBlur={() => handleFieldBlur("vehicle_year")}
                   disabled={isSubmitting}
                 />
                 {errors.vehicle_year && touched.vehicle_year && (
@@ -631,20 +671,28 @@ export default function EnhancedPlateForm({
 
             {/* Notes */}
             <div className="form-control mt-6">
-              <label className="label">
-                <span className="label-text font-medium">Additional Notes</span>
-              </label>
-              <textarea
-                className={`textarea textarea-bordered h-20 ${
-                  errors.notes && touched.notes ? 'textarea-error' : 
-                  formData.notes && !errors.notes ? 'textarea-success' : ''
-                }`}
-                placeholder="Any additional information about the vehicle (optional)"
-                value={formData.notes}
-                onChange={(e) => handleInputChange('notes', e.target.value)}
-                onBlur={() => handleFieldBlur('notes')}
-                disabled={isSubmitting}
-              />
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Additional Notes</legend>
+                <textarea
+                  className={`textarea textarea-bordered  h-24 w-full ${
+                    errors.notes && touched.notes
+                      ? "textarea-error"
+                      : formData.notes && !errors.notes
+                      ? "textarea-success"
+                      : ""
+                  }`}
+                  placeholder="Any additional information about the vehicle (optional)"
+                  value={formData.notes}
+                  onChange={(e) => handleInputChange("notes", e.target.value)}
+                  onBlur={() => handleFieldBlur("notes")}
+                  disabled={isSubmitting}
+                ></textarea>
+                <div className="label">
+                  {" "}
+                  {formData.notes.length}/500 characters
+                </div>
+              </fieldset>
+
               {errors.notes && touched.notes && (
                 <label className="label">
                   <span className="label-text-alt text-error flex items-center">
@@ -653,11 +701,6 @@ export default function EnhancedPlateForm({
                   </span>
                 </label>
               )}
-              <label className="label">
-                <span className="label-text-alt text-gray-500">
-                  {formData.notes.length}/500 characters
-                </span>
-              </label>
             </div>
           </div>
         </div>
@@ -673,10 +716,10 @@ export default function EnhancedPlateForm({
             <X className="w-4 h-4 mr-2" />
             Cancel
           </button>
-          
+
           <button
             type="submit"
-            className={`btn btn-primary ${!isValid ? 'btn-disabled' : ''}`}
+            className={`btn btn-primary ${!isValid ? "btn-disabled" : ""}`}
             disabled={!isValid || isSubmitting}
           >
             {isSubmitting ? (
@@ -687,7 +730,7 @@ export default function EnhancedPlateForm({
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                {isEditing ? 'Update License Plate' : 'Register Vehicle'}
+                {isEditing ? "Update License Plate" : "Register Vehicle"}
               </>
             )}
           </button>
@@ -706,14 +749,33 @@ export default function EnhancedPlateForm({
             Form Validation Status
           </h4>
           <div className="text-sm space-y-1">
-            <div className={`flex items-center ${formData.user_id && !errors.user_id ? 'text-success' : 'text-error'}`}>
-              {formData.user_id && !errors.user_id ? '✓' : '✗'} Vehicle owner is selected
+            <div
+              className={`flex items-center ${
+                formData.user_id && !errors.user_id
+                  ? "text-success"
+                  : "text-error"
+              }`}
+            >
+              {formData.user_id && !errors.user_id ? "✓" : "✗"} Vehicle owner is
+              selected
             </div>
-            <div className={`flex items-center ${formData.plate && !errors.plate ? 'text-success' : 'text-error'}`}>
-              {formData.plate && !errors.plate ? '✓' : '✗'} Valid license plate number is required
+            <div
+              className={`flex items-center ${
+                formData.plate && !errors.plate ? "text-success" : "text-error"
+              }`}
+            >
+              {formData.plate && !errors.plate ? "✓" : "✗"} Valid license plate
+              number is required
             </div>
-            <div className={`flex items-center ${!formData.vehicle_year || !errors.vehicle_year ? 'text-success' : 'text-error'}`}>
-              {!formData.vehicle_year || !errors.vehicle_year ? '✓' : '✗'} Vehicle year is valid (if provided)
+            <div
+              className={`flex items-center ${
+                !formData.vehicle_year || !errors.vehicle_year
+                  ? "text-success"
+                  : "text-error"
+              }`}
+            >
+              {!formData.vehicle_year || !errors.vehicle_year ? "✓" : "✗"}{" "}
+              Vehicle year is valid (if provided)
             </div>
           </div>
         </div>

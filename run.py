@@ -44,7 +44,7 @@ def run_processes():
     finally:
         # Cleanup FastAPI when Next.js stops
         print("🛑 Stopping FastAPI backend...")
-        fastapi.terminate()
+        fastapi.terminate() # type: ignore
 
 
 if __name__ == "__main__":

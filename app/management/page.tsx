@@ -406,7 +406,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       )}
 
       {/* Tab Navigation */}
-      <div className="tabs tabs-boxed mb-6">
+      <div className="tabs tabs-lift mb-6">
         <button
           className={`tab ${activeTab === "users" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("users")}

@@ -18,6 +18,9 @@ export async function POST(request: Request) {
       }),
     });
 
+    console.log(response);
+    
+
     if (!response.ok) {
       const errorData = await response.json();
       return NextResponse.json(errorData, { status: response.status });
